@@ -12,7 +12,6 @@ export default function UserLoginPrivate({ children }) {
         ) : (
             <>
                 <h1>برای دسترسی به این مسیر ابتدا باید وارد شوید</h1>
-                <div><Link to={"/login"}>برگشت به صفحه ورود</Link></div>
                 <div><Link to={"/"}>برگشت به صفحه اصلی</Link></div>
             </>
         )}

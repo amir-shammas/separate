@@ -95,7 +95,7 @@ export default function Login() {
 
   useEffect(() => {
     if (authContext.isLoggedIn) {
-      navigate('/admin-panel');
+      navigate("/admin-panel");
     }
   }, [authContext.isLoggedIn, navigate]);
 

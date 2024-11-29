@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import AuthContext from "./../../context/authContext";
+import { useNavigate } from "react-router-dom";
+
 
 export default function AdminPanelPrivate({ children }) {
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
 
     return (
         <>
@@ -12,7 +14,13 @@ export default function AdminPanelPrivate({ children }) {
         ) : (
             <>
                 <h1>شما اجازه دسترسی به این مسیر را ندارید!!</h1>
-                <Link to={"/"}>برگشت به صفحه اصلی</Link>
+                <button onClick={() => 
+                    {
+                        authContext.logout();
+                        navigate("/");
+                    }}
+                    >خروج از سایت
+                </button>
             </>
         )}
         </>
