@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { loginValidator } = require("./../validators/auth.validator");
+const { registerValidator , loginValidator } = require("./../validators/auth.validator");
 const { updateValidator , changePasswordValidator , changeRoleValidator , removeValidator , banValidator , unbanValidator , verifyEmailValidator , unverifyEmailValidator } = require("./../validators/user.validator");
 
 
@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema(
 );
 
 //* add yup validation method to mongoose statics
+//* register
+userSchema.statics.registerValidation = function (body) {
+  return registerValidator.validate(body, { abortEarly: false });
+};
 //* login
 userSchema.statics.loginValidation = function (body) {
   return loginValidator.validate(body, { abortEarly: false });

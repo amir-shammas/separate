@@ -5,6 +5,64 @@ const userModel = require("./../models/user.model");
 const { sendEmail } = require("../utils/mailer");
 
 
+exports.register = async (req, res, next) => {
+  try {
+    const { name, username, email, password, confirmPassword } = req.body;
+
+    await userModel.registerValidation(req.body).catch((err) => {
+      err.statusCode = 400;
+      throw err;
+    });
+
+    const userExists = await userModel.findOne({
+      $or: [{ username }, { email }],
+    });
+
+    if (userExists) {
+      return res.status(409).json({
+        message: "username or email is duplicated.",
+      });
+    }
+
+    const countOfRegisteredUsers = await userModel.countDocuments();
+
+    // const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;
+
+    const user = await userModel.create({
+      name,
+      username,
+      email,
+      password: hashedPassword,
+      role: countOfRegisteredUsers > 0 ? "USER" : "ADMIN",
+      // role: "USER",
+      isBan: false,
+      isEmailVerified: false
+    });
+
+    const userObject = user.toObject();
+
+    Reflect.deleteProperty(userObject, "password");
+
+    const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "3 days",
+      // expiresIn: "60 seconds",
+    });
+
+    sendEmail(
+      email,
+      username,
+      "خوش آمدید",
+      "ثبت نام شما با موفقیت انجام شد !",
+    );
+
+    return res.status(201).json({ message: "New user registered successfully !", user: userObject, accessToken });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 exports.login = async (req, res, next) => {
   try {
     const { identifier, password } = req.body;

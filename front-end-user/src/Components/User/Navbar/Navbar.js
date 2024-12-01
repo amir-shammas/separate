@@ -1,4 +1,4 @@
-import React, { useContext , useEffect } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "./../../../context/authContext";
 import swal from "sweetalert";
@@ -73,13 +73,6 @@ export default function Navbar() {
 
             {authContext.isLoggedIn === true ? (
               <>
-                {
-                  authContext.userInfos.role === "ADMIN" && (
-                    <Link to="/admin-panel" className="main-header__profile" title="پنل ادمین">
-                        پنل ادمین
-                    </Link>
-                  )
-                }
                 <Link to="#" className="main-header__profile" title="خروج از سایت" onClick={logoutHandler}>
                   خروج
                 </Link>
